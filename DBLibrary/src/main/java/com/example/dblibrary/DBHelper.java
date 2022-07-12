@@ -59,7 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int numberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, EVENTS_TABLE_NAME);
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, EVENTS_COLUMN_EVENTTIME);
         return numRows;
     }
     public Integer deleteEvents (Integer id) {
@@ -77,7 +77,7 @@ public class DBHelper extends SQLiteOpenHelper {
         res.moveToFirst();
 
         while(!res.isAfterLast()){
-            int index = res.getColumnIndex(EVENTS_TABLE_NAME);
+            int index = res.getColumnIndex(EVENTS_COLUMN_EVENTTIME);
             if(index >= 0) {
                 array_list.add(res.getString(index));
                 res.moveToNext();
