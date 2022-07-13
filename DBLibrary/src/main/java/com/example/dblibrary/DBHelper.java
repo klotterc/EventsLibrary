@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "events.db";
+    public static final String EVENTS_COLUMN_ID = "id";
     public static final String EVENTS_TABLE_NAME = "events";
     public static final String EVENTS_COLUMN_EVENTTIME = "EventTime";
     public static final String EVENTS_COLUMN_HOSTID = "HostID";
@@ -69,17 +70,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[] { Integer.toString(id) });
     }
 
-    public ArrayList<String> getAllEvents() {
-        ArrayList<String> array_list = new ArrayList<>();
+    public ArrayList<Integer> getAllEvents() {
+        ArrayList<Integer> array_list = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from events", null );
         res.moveToFirst();
 
         while(!res.isAfterLast()){
-            int index = res.getColumnIndex(EVENTS_COLUMN_EVENTTIME);
+            int index = res.getColumnIndex(EVENTS_COLUMN_ID);
             if(index >= 0) {
-                array_list.add(res.getString(index));
+                array_list.add(res.getInt(index));
                 res.moveToNext();
             }
         }
