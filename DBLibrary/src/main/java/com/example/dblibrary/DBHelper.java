@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean insertEvent (String eventTime, String hostID, String userId, int locationNbr, int routeNbr, int day, String logger, int eventNbr, String addtlDesc, int addtlNbr) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(EVENTS_TABLE_NAME, eventTime);
+        contentValues.put(EVENTS_COLUMN_EVENTTIME, eventTime);
         contentValues.put(EVENTS_COLUMN_HOSTID, hostID);
         contentValues.put(EVENTS_COLUMN_USERID, userId);
         contentValues.put(EVENTS_COLUMN_LOCATIONNBR, locationNbr);
@@ -63,7 +63,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int numberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, EVENTS_COLUMN_EVENTTIME);
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, EVENTS_COLUMN_ID);
         return numRows;
     }
     public Integer deleteEvents (Integer id) {
@@ -92,7 +92,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean updateEvents (Integer id, String eventTime, String hostID, String userId, int locationNbr, int routeNbr, int day, String logger, int eventNbr, String addtlDesc, int addtlNbr) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(EVENTS_TABLE_NAME, eventTime);
+        contentValues.put(EVENTS_COLUMN_EVENTTIME, eventTime);
         contentValues.put(EVENTS_COLUMN_HOSTID, hostID);
         contentValues.put(EVENTS_COLUMN_USERID, userId);
         contentValues.put(EVENTS_COLUMN_LOCATIONNBR, locationNbr);
