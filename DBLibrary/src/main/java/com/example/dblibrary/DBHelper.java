@@ -16,6 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EVENTS_TABLE_NAME = "events";
     public static final String EVENTS_COLUMN_EVENTTIME = "EventTime";
     public static final String EVENTS_COLUMN_HOSTID = "HostID";
+    public static final String EVENTS_COLUMN_APPID = "AppID";
     public static final String EVENTS_COLUMN_USERID = "UserID";
     public static final String EVENTS_COLUMN_LOCATIONNBR = "LocationNbr";
     public static final String EVENTS_COLUMN_ROUTENBR = "RouteNbr";
@@ -33,7 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "create table events " +
-                        "(id integer primary key, EventTime text,HostID text,UserID text,LocationNbr integer(4),RouteNbr integer(2),Day integer(1),Logger text,EventNbr integer(5),AddtlDesc text, AddtlNbr integer)"
+                        "(id integer primary key, EventTime text,HostID text,AppId text default 'CPRNT',UserID text,LocationNbr integer(4),RouteNbr integer(2),Day integer(1),Logger text,EventNbr integer(5),AddtlDesc text, AddtlNbr integer)"
         );
     }
     public boolean insertEvent (String eventTime, String hostID, String userId, int locationNbr, int routeNbr, int day, String logger, int eventNbr, String addtlDesc, int addtlNbr) {
@@ -57,6 +58,77 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from events where id="+id+"", null );
         return res;
+    }
+
+    public String getDBAsXML() {
+        ArrayList<Integer> ids = getAllEvents();
+        StringBuilder xml = new StringBuilder("CPRNT;");
+        for(int id:ids) {
+            xml.append(getEventAsXMLString(id));
+        }
+        return xml.toString();
+    }
+
+    private String getEventAsXMLString(int id) {
+        Cursor rs = getData(id);
+        rs.moveToFirst();
+
+        int eventTimeIndex = rs.getColumnIndex(DBHelper.EVENTS_COLUMN_EVENTTIME);
+        int hostIDIndex = rs.getColumnIndex(DBHelper.EVENTS_COLUMN_HOSTID);
+        int userIDIndex = rs.getColumnIndex(DBHelper.EVENTS_COLUMN_USERID);
+        int locationNbrIndex = rs.getColumnIndex(DBHelper.EVENTS_COLUMN_LOCATIONNBR);
+        int routeNbrIndex = rs.getColumnIndex(DBHelper.EVENTS_COLUMN_ROUTENBR);
+        int dayIndex = rs.getColumnIndex(DBHelper.EVENTS_COLUMN_DAY);
+        int loggerIndex = rs.getColumnIndex(DBHelper.EVENTS_COLUMN_LOGGER);
+        int eventNbrIndex = rs.getColumnIndex(DBHelper.EVENTS_COLUMN_EVENTNBR);
+        int addtlDescIndex = rs.getColumnIndex(DBHelper.EVENTS_COLUMN_ADDTLDESC);
+        int addtlNbrIndex = rs.getColumnIndex(DBHelper.EVENTS_COLUMN_ADDTLNBR);
+
+        String eventTime = "";
+        String hostID = "";
+        String userID = "";
+        String locationNbr = "";
+        String routeNbr = "";
+        String day = "";
+        String logger = "";
+        String eventNbr = "";
+        String addtlDesc = "";
+        String addtlNbr = "";
+        if(eventTimeIndex >= 0) {
+            eventTime = rs.getString(eventTimeIndex);
+        }
+        if(hostIDIndex >= 0) {
+            hostID = rs.getString(hostIDIndex);
+        }
+        if(userIDIndex >= 0) {
+            userID = rs.getString(userIDIndex);
+        }
+        if(locationNbrIndex >= 0) {
+            locationNbr = rs.getString(locationNbrIndex);
+        }
+        if(routeNbrIndex >= 0) {
+            routeNbr = rs.getString(routeNbrIndex);
+        }
+        if(dayIndex >= 0) {
+            day = rs.getString(dayIndex);
+        }
+        if(loggerIndex >= 0) {
+            logger = rs.getString(loggerIndex);
+        }
+        if(eventNbrIndex >= 0) {
+            eventNbr = rs.getString(eventNbrIndex);
+        }
+        if(addtlDescIndex >= 0) {
+            addtlDesc = rs.getString(addtlDescIndex);
+        }
+        if(addtlNbrIndex >= 0) {
+            addtlNbr = rs.getString(addtlNbrIndex);
+        }
+
+        if (!rs.isClosed())  {
+            rs.close();
+        }
+        return "<LogEntry EventTime=\""+eventTime+"\" HostId=\""+hostID+"\" UserID=\""+userID+"\" LocationNbr=\""+locationNbr+"\" RouteNbr=\""+routeNbr+"\" Day=\""+day+"\" Logger=\""+logger+"\" EventNbr=\""+eventNbr+"\" AddtlDesc=\""+addtlDesc+"\" AddtlNbr=\""+addtlNbr+"\" />";
     }
 
 
