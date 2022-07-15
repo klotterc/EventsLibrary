@@ -33,22 +33,23 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "create table events " +
-                        "(id integer primary key, EventTime text,HostID text,UserID text,LocationNbr text,RouteNbr text,Day text,Logger text,EventNbr number,AddtlDesc text, AddtlNbr text)"
+                        "(id integer primary key, EventTime text,HostID text,UserID text,LocationNbr integer(4),RouteNbr integer(2),Day integer(1),Logger text,EventNbr integer(5),AddtlDesc text, AddtlNbr integer)"
         );
     }
-    public boolean insertEvent (String eventTime, String hostID, String userId, String locationNbr, String routeNbr, String day, String logger, String eventNbr, String addtlDesc, String addtlNbr) {
+    public boolean insertEvent (String eventTime, String hostID, String userId, int locationNbr, int routeNbr, int day, String logger, int eventNbr, String addtlDesc, int addtlNbr) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("EventTime", eventTime);
-        contentValues.put("HostID", hostID);
-        contentValues.put("UserID", userId);
-        contentValues.put("LocationNbr", locationNbr);
-        contentValues.put("RouteNbr", routeNbr);
-        contentValues.put("Day", day);
-        contentValues.put("Logger", logger);
-        contentValues.put("EventNbr", eventNbr);
-        contentValues.put("AddtlDesc", addtlDesc);
-        contentValues.put("AddtlNbr", addtlNbr);
+        contentValues.put(EVENTS_TABLE_NAME, eventTime);
+        contentValues.put(EVENTS_COLUMN_HOSTID, hostID);
+        contentValues.put(EVENTS_COLUMN_USERID, userId);
+        contentValues.put(EVENTS_COLUMN_LOCATIONNBR, locationNbr);
+        contentValues.put(EVENTS_COLUMN_ROUTENBR, routeNbr);
+        contentValues.put(EVENTS_COLUMN_DAY, day);
+        contentValues.put(EVENTS_COLUMN_LOGGER, logger);
+        contentValues.put(EVENTS_COLUMN_EVENTNBR, eventNbr);
+        contentValues.put(EVENTS_COLUMN_ADDTLDESC, addtlDesc);
+        contentValues.put(EVENTS_COLUMN_ADDTLNBR, addtlNbr);
+
         db.insert("events", null, contentValues);
         return true;
     }
@@ -57,6 +58,8 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res =  db.rawQuery( "select * from events where id="+id+"", null );
         return res;
     }
+
+
 
     public int numberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -86,19 +89,19 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return array_list;
     }
-    public boolean updateEvents (Integer id, String eventTime, String hostID, String userId, String locationNbr, String routeNbr, String day, String logger, String eventNbr, String addtlDesc, String addtlNbr) {
+    public boolean updateEvents (Integer id, String eventTime, String hostID, String userId, int locationNbr, int routeNbr, int day, String logger, int eventNbr, String addtlDesc, int addtlNbr) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("EventTime", eventTime);
-        contentValues.put("HostID", hostID);
-        contentValues.put("UserID", userId);
-        contentValues.put("LocationNbr", locationNbr);
-        contentValues.put("RouteNbr", routeNbr);
-        contentValues.put("Day", day);
-        contentValues.put("Logger", logger);
-        contentValues.put("EventNbr", eventNbr);
-        contentValues.put("AddtlDesc", addtlDesc);
-        contentValues.put("AddtlNbr", addtlNbr);
+        contentValues.put(EVENTS_TABLE_NAME, eventTime);
+        contentValues.put(EVENTS_COLUMN_HOSTID, hostID);
+        contentValues.put(EVENTS_COLUMN_USERID, userId);
+        contentValues.put(EVENTS_COLUMN_LOCATIONNBR, locationNbr);
+        contentValues.put(EVENTS_COLUMN_ROUTENBR, routeNbr);
+        contentValues.put(EVENTS_COLUMN_DAY, day);
+        contentValues.put(EVENTS_COLUMN_LOGGER, logger);
+        contentValues.put(EVENTS_COLUMN_EVENTNBR, eventNbr);
+        contentValues.put(EVENTS_COLUMN_ADDTLDESC, addtlDesc);
+        contentValues.put(EVENTS_COLUMN_ADDTLNBR, addtlNbr);
         db.update("events", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
         return true;
     }
